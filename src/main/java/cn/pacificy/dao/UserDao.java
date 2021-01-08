@@ -11,6 +11,7 @@ import cn.pacificy.utils.JDBCUtils;
 import cn.pacificy.utils.JDBCUtils2;
 import com.alibaba.druid.pool.DruidDataSourceFactory;
 import org.apache.commons.dbutils.QueryRunner;
+import org.apache.commons.dbutils.ResultSetHandler;
 import org.apache.commons.dbutils.handlers.BeanHandler;
 
 import cn.pacificy.domain.User;
@@ -19,14 +20,11 @@ import javax.sql.DataSource;
 
 public class UserDao {
 
+	QueryRunner qr = new QueryRunner(JDBCUtils.getDataSource());
 
-	public User findUserByUsername1(String username) {
+	public User findUserByUsername(String username) {
 		User user = null;
-		System.out.println("qr start");
-		QueryRunner qr = new QueryRunner(JDBCUtils.getDataSource());
-		if(qr == null){
-			System.out.println("qr is null!");
-		}
+
 		try {
 			user = qr.query("select * from user where name = ?", new BeanHandler<User>(User.class),username);
 		} catch (SQLException e) {
@@ -37,7 +35,7 @@ public class UserDao {
 		return user;
 	}
 
-	public User findUserByUsername(String username){
+	public User findUserByUsername1(String username){
 		User user = null;
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -75,7 +73,49 @@ public class UserDao {
 		return user;
 	}
 
-	public boolean addUser(String username,String password){
+	public boolean addUser(String username,String password) {
+		try {
+			int update = qr.update("insert into user values (null,?,?)", username, password);
+			if(update==0){
+				return false;
+			}
+			return true;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return false;
+	}
+
+	public boolean login(String username, String password) {
+		User user = null;
+		try{
+			user = qr.query("select * from user where name = ? and password=?", new ResultSetHandler<User>(){
+
+				@Override
+				public User handle(ResultSet rs) throws SQLException {
+					User user = new User();
+					if(rs.next()){
+
+						user.setUsername(rs.getString("name"));
+						user.setPassword(rs.getString("password"));
+					}
+					return user;
+				}
+
+			}, username,password);
+		} catch (SQLException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	    }
+		if(user.getUsername()==null){
+			return false;
+		}
+		return true;
+	}
+
+	public boolean addUser1(String username,String password){
 		//User user = null;
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -101,7 +141,7 @@ public class UserDao {
 		return true;
 	}
 
-	public boolean login(String username, String password) {
+	public boolean login1(String username, String password) {
 		User user = null;
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -114,6 +154,7 @@ public class UserDao {
 			// 预编译SQL:
 			pstmt = conn.prepareStatement(sql);
 			// 设置参数:
+
 			// 执行SQL:
 			rs = pstmt.executeQuery();
 			while(rs.next()){

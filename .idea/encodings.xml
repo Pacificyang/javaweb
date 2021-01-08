@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding" defaultCharsetForPropertiesFiles="UTF-8">
+    <file url="file://$PROJECT_DIR$/src/main/java/cn/pacificy/servlet/AJAX2Servlet.java" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/src/main/java/cn/pacificy/servlet/RegisterAJAXServlet.java" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/src/main/java/cn/pacificy/utils/DruidUtil.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/main/java/cn/pacificy/utils/JDBCUtils.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/cn/pacificy/utils/JDBCUtils2.java" charset="GBK" />
+    <file url="PROJECT" charset="UTF-8" />
+  </component>
+</project>
